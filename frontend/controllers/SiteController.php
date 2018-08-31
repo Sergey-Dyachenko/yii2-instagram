@@ -46,6 +46,7 @@ class SiteController extends Controller
                     'logout' => ['post'],
                 ],
             ],
+
         ];
     }
 
@@ -62,6 +63,10 @@ class SiteController extends Controller
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
+            'auth' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'onAuthSuccess'],
+            ],
         ];
     }
 
@@ -70,6 +75,11 @@ class SiteController extends Controller
      *
      * @return mixed
      */
+    public function onAuthSuccess($client)
+    {
+        (new AuthHandler($client))->handle();
+    }
+
     public function actionIndex()
     {
         return $this->render('index');
